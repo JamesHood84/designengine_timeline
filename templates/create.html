@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Create New Project</h2>
+<form method="post">
+    <div class="mb-3">
+        <label for="name" class="form-label">Project Name</label>
+        <input type="text" class="form-control" id="name" name="name" required>
+    </div>
+    
+    <h4 class="mt-4">Creation Pack</h4>
+    <div class="mb-3">
+        <label for="creation_start" class="form-label">Start Date</label>
+        <input type="date" class="form-control" id="creation_start" name="creation_start" required>
+    </div>
+    <div class="mb-3">
+        <label for="creation_weeks" class="form-label">Duration (weeks)</label>
+        <input type="number" class="form-control" id="creation_weeks" name="creation_weeks" min="1" required>
+    </div>
+    
+    <h4 class="mt-4">HomeDesign Pack</h4>
+    <div class="mb-3">
+        <label for="homedesign_weeks" class="form-label">Duration (weeks)</label>
+        <input type="number" class="form-control" id="homedesign_weeks" name="homedesign_weeks" min="1" required>
+    </div>
+    
+    <h4 class="mt-4">Construction Pack</h4>
+    <div class="mb-3">
+        <label for="construction_weeks" class="form-label">Duration (weeks)</label>
+        <input type="number" class="form-control" id="construction_weeks" name="construction_weeks" min="1" required>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Create</button>
+    <a href="{{ url_for('home') }}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

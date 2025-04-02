@@ -1,0 +1,299 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .gantt-container {
+        width: 100%;
+        overflow-x: auto;
+    }
+    .gantt-header {
+        display: flex;
+        margin-left: 150px; /* Matches row label width */
+        height: 30px;
+    }
+    .gantt-header-item {
+        flex: 1;
+        min-width: 0;
+        font-size: 0.7rem;
+        text-align: center;
+        position: relative;
+        border-right: 1px solid #dee2e6;
+    }
+    .gantt-row {
+        display: flex;
+        margin-bottom: 10px;
+        align-items: center;
+    }
+    .gantt-row-label {
+        width: 150px;
+        padding-right: 10px;
+        font-weight: bold;
+    }
+    .gantt-bar-container {
+        flex: 1;
+        height: 30px;
+        background-color: #f8f9fa;
+        position: relative;
+    }
+    .gantt-bar {
+        height: 100%;
+        position: absolute;
+        border-radius: 4px;
+        color: white;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+    }
+</style>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-dark-teal">{{ project['name'] }}</h2>
+    <span class="badge bg-dark-teal py-2 px-3 text-white">
+        <i class="bi bi-calendar-check"></i> {{ project['completion_date'].strftime('%Y-%m-%d') }}
+        ({{ project['total_weeks'] }} weeks)
+    </span>
+</div>
+
+<!-- Gantt Chart -->
+<div class="card mb-4 border-0 shadow">
+    <div class="card-header bg-white border-0">
+        <h5 class="text-dark-teal mb-0"><i class="bi bi-bar-chart-steps"></i> Project Timeline</h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="gantt-container p-3">
+            <!-- Week Headers -->
+            <div class="gantt-header">
+                {% for week in range(project['total_weeks']) %}
+                    <div class="gantt-header-item">
+                        {% if week == 0 or (week+1) % 2 == 0 or week == project['total_weeks']-1 %}
+                            W{{ week+1 }}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Creation Pack -->
+            <div class="gantt-row">
+                <div class="gantt-row-label">Creation Pack</div>
+                <div class="gantt-bar-container">
+                    <div class="gantt-bar bg-dark-teal" 
+                         style="width: {{ (project['creation']['weeks'] / project['total_weeks']) * 100 }}%;">
+                        {{ project['creation']['weeks'] }}w
+                    </div>
+                </div>
+            </div>
+
+            <!-- HomeDesign Pack -->
+            <div class="gantt-row">
+                <div class="gantt-row-label">HomeDesign Pack</div>
+                <div class="gantt-bar-container">
+                    <div class="gantt-bar bg-dark-teal"
+                         style="left: {{ (project['creation']['weeks'] / project['total_weeks']) * 100 }}%;
+                                width: {{ (project['homedesign']['weeks'] / project['total_weeks']) * 100 }}%;">
+                        {{ project['homedesign']['weeks'] }}w
+                    </div>
+                </div>
+            </div>
+
+            <!-- Construction Pack -->
+            <div class="gantt-row">
+                <div class="gantt-row-label">Construction Pack</div>
+                <div class="gantt-bar-container">
+                    <div class="gantt-bar bg-dark-teal"
+                         style="left: {{ ((project['creation']['weeks'] + project['homedesign']['weeks']) / project['total_weeks']) * 100 }}%;
+                                width: {{ (project['construction']['weeks'] / project['total_weeks']) * 100 }}%;">
+                        {{ project['construction']['weeks'] }}w
+                    </div>
+                </div>
+            </div>
+
+            <!-- Current Week Indicator -->
+            <div class="gantt-row" style="height: 40px;">
+                <div class="gantt-row-label">Today</div>
+                <div class="gantt-bar-container position-relative">
+                    <div class="position-absolute" id="current-week-indicator" style="bottom: 10px; transform: translateX(-50%);">
+                        <i class="bi bi-house-fill text-danger" style="font-size: 1.5rem;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Three Info Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow">
+            <div class="card-header bg-dark-teal text-white">
+                <h5 class="mb-0"><i class="bi bi-pencil-square"></i> Creation Pack</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Start:</strong> {{ project['creation']['start'].strftime('%Y-%m-%d') }}</p>
+                <p><strong>End:</strong> {{ project['creation']['end'].strftime('%Y-%m-%d') }}</p>
+                <p><strong>Duration:</strong> {{ project['creation']['weeks'] }} weeks</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow">
+            <div class="card-header bg-dark-teal text-white">
+                <h5 class="mb-0"><i class="bi bi-house"></i> HomeDesign Pack</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Start:</strong> {{ project['homedesign']['start'].strftime('%Y-%m-%d') }}</p>
+                <p><strong>End:</strong> {{ project['homedesign']['end'].strftime('%Y-%m-%d') }}</p>
+                <p><strong>Duration:</strong> {{ project['homedesign']['weeks'] }} weeks</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow">
+            <div class="card-header bg-dark-teal text-white">
+                <h5 class="mb-0"><i class="bi bi-hammer"></i> Construction Pack</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Start:</strong> {{ project['construction']['start'].strftime('%Y-%m-%d') }}</p>
+                <p><strong>End:</strong> {{ project['construction']['end'].strftime('%Y-%m-%d') }}</p>
+                <p><strong>Duration:</strong> {{ project['construction']['weeks'] }} weeks</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Action Buttons -->
+<div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+    <a href="{{ url_for('edit', id=project['id']) }}" class="btn btn-outline-primary me-md-2">
+        <i class="bi bi-pencil"></i> Edit Project
+    </a>
+    <form action="{{ url_for('delete', id=project['id']) }}" method="post" class="d-inline">
+        <button type="submit" class="btn btn-outline-danger me-md-2" 
+                onclick="return confirm('Are you sure you want to delete this project?')">
+            <i class="bi bi-trash"></i> Delete Project
+        </button>
+    </form>
+    <a href="{{ url_for('home') }}" class="btn btn-outline-secondary me-md-2">
+        <i class="bi bi-arrow-left"></i> Back to Projects
+    </a>
+    <button class="btn btn-primary" onclick="window.print()">
+        <i class="bi bi-printer"></i> Print Timeline
+    </button>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const projectStart = new Date("{{ project['creation']['start'].strftime('%Y-%m-%d') }}");
+        const projectEnd = new Date("{{ project['construction']['end'].strftime('%Y-%m-%d') }}");
+        const today = new Date();
+        
+        if (today >= projectStart && today <= projectEnd) {
+            const totalDays = Math.floor((projectEnd - projectStart) / (1000 * 60 * 60 * 24));
+            const daysPassed = Math.floor((today - projectStart) / (1000 * 60 * 60 * 24));
+            const percentage = (daysPassed / totalDays) * 100;
+            
+            const indicator = document.getElementById('current-week-indicator');
+            indicator.style.left = `${percentage}%`;
+        } else {
+            document.getElementById('current-week-indicator').style.display = 'none';
+        }
+    });
+</script>
+
+<!-- Added a divider with spacing -->
+<hr class="my-4">  <!-- Horizontal rule with vertical margin -->
+
+
+<!-- Permissions Checklist -->
+<div class="card mb-4 border-0 shadow">
+    <div class="card-header bg-white border-0">
+        <h5 class="text-dark-teal mb-0"><i class="bi bi-clipboard-check"></i> Permissions Required</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="planning-householder">
+                    <label class="form-check-label" for="planning-householder">
+                        Planning: Householder Planning Application
+                    </label>
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="planning-ldc">
+                    <label class="form-check-label" for="planning-ldc">
+                        Planning: Lawful Development (LDC)
+                    </label>
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="planning-full">
+                    <label class="form-check-label" for="planning-full">
+                        Planning: Full Planning Application
+                    </label>
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="planning-prior">
+                    <label class="form-check-label" for="planning-prior">
+                        Planning: Prior Approval
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="planning-listed">
+                    <label class="form-check-label" for="planning-listed">
+                        Planning: Listed Building Consent
+                    </label>
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="planning-conditions">
+                    <label class="form-check-label" for="planning-conditions">
+                        Planning Conditions
+                    </label>
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="appeals">
+                    <label class="form-check-label" for="appeals">
+                        Appeals Application
+                    </label>
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="party-wall">
+                    <label class="form-check-label" for="party-wall">
+                        Party Wall
+                    </label>
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="build-over">
+                    <label class="form-check-label" for="build-over">
+                        Build Over Agreement
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Save Button -->
+        <div class="d-flex justify-content-end mt-3">
+            <button class="btn btn-dark-teal">
+                <i class="bi bi-save"></i> Save Permissions
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- [Rest of your template with the three info cards and buttons remains unchanged] -->
+
+<style>
+    /* Add to your existing styles */
+    .form-check-input {
+        width: 1.2em;
+        height: 1.2em;
+        margin-top: 0.2em;
+    }
+    .form-check-label {
+        margin-left: 0.5em;
+        font-weight: 500;
+    }
+</style>
+{% endblock %}

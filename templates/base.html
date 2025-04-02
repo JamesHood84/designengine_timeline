@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Timeline Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --dark-teal: #264653;
+            --teal: #2a9d8f;
+            --yellow: #e9c46a;
+            --orange: #f4a261;
+            --red-orange: #e76f51;
+        }
+        
+        .bg-dark-teal { background-color: var(--dark-teal); }
+        .bg-teal { background-color: var(--teal); }
+        .bg-yellow { background-color: var(--yellow); }
+        .bg-orange { background-color: var(--orange); }
+        .bg-red-orange { background-color: var(--red-orange); }
+        
+        .text-dark-teal { color: var(--dark-teal); }
+        .text-yellow { color: var(--yellow); }
+        
+        .navbar { background-color: var(--dark-teal) !important; }
+        
+        .btn-primary {
+            background-color: var(--teal);
+            border-color: var(--teal);
+        }
+        
+        .btn-primary:hover {
+            background-color: #23857a;
+            border-color: #23857a;
+        }
+        
+        /* Gantt Chart Styles */
+        .gantt-container {
+            overflow-x: auto;
+            margin-bottom: 2rem;
+        }
+        
+        .gantt-header {
+            display: flex;
+            border-bottom: 2px solid var(--dark-teal);
+            margin-bottom: 0.5rem;
+        }
+        
+        .gantt-header-item {
+            min-width: 50px;
+            text-align: center;
+            font-weight: bold;
+            color: var(--dark-teal);
+        }
+        
+        .gantt-row {
+            display: flex;
+            margin-bottom: 0.5rem;
+            align-items: center;
+        }
+        
+        .gantt-row-label {
+            min-width: 150px;
+            font-weight: bold;
+            padding-right: 1rem;
+        }
+        
+        .gantt-bar-container {
+            flex-grow: 1;
+            height: 30px;
+            background-color: #f8f9fa;
+            position: relative;
+        }
+        
+        .gantt-bar {
+            height: 100%;
+            position: absolute;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .gantt-milestone {
+            width: 16px;
+            height: 16px;
+            background-color: var(--dark-teal);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+        }
+        
+        .creation-bar { background-color: var(--teal); }
+        .homedesign-bar { background-color: var(--yellow); color: var(--dark-teal); }
+        .construction-bar { background-color: var(--red-orange); }
+        
+        .gantt-today-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: var(--dark-teal);
+            z-index: 5;
+        }
+        
+        .gantt-today-label {
+            position: absolute;
+            top: -20px;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: var(--dark-teal);
+        }
+        
+        .phase-card .card-header {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-calendar-range"></i> Project Timeline Dashboard
+            </a>
+        </div>
+    </nav>
+    
+    <div class="container mt-4">
+        {% block content %}{% endblock %}
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
