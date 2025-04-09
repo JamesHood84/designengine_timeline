@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gradient-to-br from-blue-50 to-white text-gray-900 min-h-screen;
+  }
+}
+
+@layer components {
+  .title-container {
+    @apply relative py-20 mb-16;
+  }
+
+  .title-content {
+    @apply relative z-10 text-center;
+  }
+
+  .main-title {
+    @apply text-7xl font-black tracking-tight mb-4 text-blue-600;
+  }
+
+  .subtitle {
+    @apply text-xl text-blue-600/80 font-medium tracking-wide;
+  }
+
+  .glass-card {
+    @apply bg-white/90 backdrop-blur-xl border border-blue-100/50 shadow-lg;
+  }
+  
+  .stat-card {
+    @apply rounded-2xl p-4 transition-all duration-300 
+    hover:shadow-lg hover:scale-[1.02] cursor-default 
+    bg-gradient-to-br from-white to-blue-50
+    border border-blue-100/50;
+  }
+
+  .stat-card p.stat-value {
+    @apply text-2xl font-bold text-gray-900 text-right tabular-nums tracking-tight;
+    font-feature-settings: "tnum";
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-3 bg-white border border-blue-100 
+    rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-transparent 
+    transition-all placeholder:text-blue-300 outline-none text-gray-900;
+  }
+  
+  .btn-primary {
+    @apply flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl 
+    hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-blue-100 
+    hover:scale-[1.02] focus:ring-2 focus:ring-blue-200 focus:ring-offset-2 
+    focus:ring-offset-white;
+  }
+  
+  .btn-secondary {
+    @apply flex items-center gap-2 px-6 py-3 border border-blue-100 rounded-xl 
+    text-blue-600 hover:bg-blue-50 transition-all duration-300 
+    focus:ring-2 focus:ring-blue-200;
+  }
+
+  .table-wrapper {
+    @apply rounded-2xl overflow-hidden border border-blue-100/50;
+  }
+
+  .table-header {
+    @apply bg-blue-50/50 text-blue-600 font-medium uppercase tracking-wider text-xs;
+  }
+
+  .table-cell {
+    @apply px-4 py-3 text-sm text-gray-600;
+  }
+
+  .table-cell-number {
+    @apply px-4 py-3 text-sm text-right tabular-nums tracking-tight whitespace-nowrap;
+    font-feature-settings: "tnum";
+  }
+
+  .finish-breakdown {
+    @apply mt-3 pt-3 border-t border-gray-200;
+  }
+
+  .finish-breakdown-item {
+    @apply flex justify-between text-xs text-gray-600;
+  }
+
+  .finish-breakdown-value {
+    @apply ml-2 tabular-nums tracking-tight whitespace-nowrap;
+    font-feature-settings: "tnum";
+  }
+}
+
+@layer utilities {
+  .shadow-soft {
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.1);
+  }
+}
